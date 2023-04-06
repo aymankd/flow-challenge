@@ -1,4 +1,4 @@
-import { StockTypeByMonth } from "../types/stock.type";
+import { BestTradeType, StockTypeByMonth } from "../types/stock.type";
 import { ApiResponse } from "./types";
 import HttpClient from "./utils/http-client";
 
@@ -10,6 +10,17 @@ const getStocksByMonth = (date: Date) => {
   });
 };
 
+const getBestTrade = (stockType: string, budget: number) => {
+  return HttpClient.get<ApiResponse<BestTradeType>>(
+    `${API_URL}/stocks/bestTrade`,
+    {
+      stockType,
+      budget: budget.toString(),
+    }
+  );
+};
+
 export const stockApi = {
   getStocksByMonth,
+  getBestTrade,
 };

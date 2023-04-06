@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     element: (
       <div className="flex flex-col">
         <Navbar />
-        <main className="m-auto mx-auto w-[100%] max-2xl:max-w-[1200px] max-xl:max-w-[90vw] max-w-3xl py-20 px-10 text-center">
+        <main className="m-auto mx-auto w-full md:w-10/12 xl:w-7/12 py-20 px-10 text-center flex flex-col gap-10">
           <Outlet />
         </main>
       </div>
