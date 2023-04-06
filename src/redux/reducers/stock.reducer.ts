@@ -1,9 +1,13 @@
 import { STOCK_ACTIONS } from "../../constants";
-import { StockTypeByMonth } from "../../types/stock.type";
+import {
+  BestTradeByStockTypeType,
+  StockTypeByMonth,
+} from "../../types/stock.type";
 import { StockActionType } from "../actions";
 
 export type StocksState = {
   StocksTypeByMonth: StockTypeByMonth;
+  bestTrade: BestTradeByStockTypeType;
   failure: boolean;
   isLoading: boolean;
 };
@@ -12,6 +16,10 @@ const initialState: StocksState = {
   StocksTypeByMonth: {
     amazon: [],
     google: [],
+  },
+  bestTrade: {
+    amazon: null,
+    google: null,
   },
   failure: false,
   isLoading: false,
@@ -39,6 +47,14 @@ export function stockReducer(
         ...state,
         failure: true,
         isLoading: false,
+      };
+    case STOCK_ACTIONS.GET_BEST_TRADE_DONE:
+      return {
+        ...state,
+        bestTrade: {
+          ...state.bestTrade,
+          [action.payload.stockType]: action.payload.trade,
+        },
       };
     default:
       return state;

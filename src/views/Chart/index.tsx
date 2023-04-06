@@ -2,9 +2,17 @@ import React, { useEffect } from "react";
 import { ChartDataset, Point } from "chart.js";
 import { useDispatch, useSelector } from "react-redux";
 import { Chart } from "../../components/Chart";
-import { getStocksByMonthAction } from "../../redux/actions";
+import {
+  getBestTradeAction,
+  getStocksByMonthAction,
+} from "../../redux/actions";
 import { stocksSelector } from "../../redux/selectors/stock.selector";
-import { StockType, StockTypeByMonth } from "../../types/stock.type";
+import {
+  BestTradeType,
+  StockType,
+  StockTypeByMonth,
+} from "../../types/stock.type";
+import { toCompleteFrenchDateformat } from "../../helpers/date.helper";
 
 const getDataFromStocksTypeByMonth = (
   stocksTypeByMonth: StockTypeByMonth,
@@ -39,13 +47,34 @@ export default function ChartPage() {
     },
   ];
 
+  const bestTrade = (type: StockType, bestTradeType: BestTradeType) => (
+    <h2>
+      {type === StockType.AMAZON ? "Ayman" : "Anouar"} devrait acheter 100 000 €
+      d&apos;action {type === StockType.AMAZON ? "Amazon" : "Google"} le{" "}
+      {toCompleteFrenchDateformat(bestTradeType.buyDate)} au prix de{" "}
+      {bestTradeType.buyPrice} €. il devrait ensuite vendre ces actions le{" "}
+      {toCompleteFrenchDateformat(bestTradeType.sellDate)} au prix de{" "}
+      {bestTradeType.sellPrice} € pour faire un gain de{" "}
+      {bestTradeType.profit.toFixed(2)} €.
+    </h2>
+  );
   useEffect(() => {
     dispatch(getStocksByMonthAction());
+    dispatch(getBestTradeAction(StockType.AMAZON));
+    dispatch(getBestTradeAction(StockType.GOOGLE));
   }, [dispatch]);
 
   return (
-    <div>
+    <>
       <Chart data={data} />
-    </div>
+      <div>
+        {state.bestTrade.amazon &&
+          bestTrade(StockType.AMAZON, state.bestTrade.amazon)}
+      </div>
+      <div>
+        {state.bestTrade.google &&
+          bestTrade(StockType.GOOGLE, state.bestTrade.google)}
+      </div>
+    </>
   );
 }

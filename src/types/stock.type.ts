@@ -25,4 +25,13 @@ export type StockByMonth = {
   month_price: number;
 };
 
+export type BestTradeType<T = Date> = {
+  buyPrice: number;
+  sellPrice: number;
+  profit: number;
+  buyDate: T;
+  sellDate: T;
+};
+
 export type StockTypeByMonth = Record<StockType, StockByMonth[]>;
+export type BestTradeByStockTypeType = Record<StockType, BestTradeType | null>;

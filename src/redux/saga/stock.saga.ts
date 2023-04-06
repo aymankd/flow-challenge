@@ -1,9 +1,13 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { stockApi } from "../../apis";
 import { CustomAxiosResponse } from "../../apis/types";
 import { STOCK_ACTIONS } from "../../constants";
-import { StockTypeByMonth } from "../../types/stock.type";
-import { getStocksByMonthDoneAction } from "../actions";
+import { BestTradeType, StockTypeByMonth } from "../../types/stock.type";
+import {
+  getBestTradeActionType,
+  getBestTradeDoneAction,
+  getStocksByMonthDoneAction,
+} from "../actions";
 
 function* getStocksByMonth() {
   try {
@@ -20,7 +24,35 @@ function* getStocksByMonth() {
     // TODO: add toest config later
   }
 }
+function* getBestTrade(action: getBestTradeActionType) {
+  try {
+    const result: CustomAxiosResponse<Partial<BestTradeType<string>>> =
+      yield call(stockApi.getBestTrade, action.payload, 100000);
+    console.log("result", result);
+    if (
+      result.data.data.buyDate !== undefined &&
+      result.data.data.sellDate !== undefined &&
+      result.data.data.profit !== undefined &&
+      result.data.data.buyPrice !== undefined &&
+      result.data.data.sellPrice !== undefined
+    ) {
+      yield put(
+        getBestTradeDoneAction({
+          stockType: action.payload,
+          trade: {
+            ...result.data.data,
+            sellDate: new Date(result.data.data.sellDate),
+            buyDate: new Date(result.data.data.buyDate),
+          } as BestTradeType,
+        })
+      );
+    }
+  } catch (e) {
+    console.log("error", e);
+  }
+}
 
 export default function* stockSaga() {
   yield takeLatest(STOCK_ACTIONS.GET_STOCKS_BY_MONTH, getStocksByMonth);
+  yield takeEvery(STOCK_ACTIONS.GET_BEST_TRADE, getBestTrade);
 }
