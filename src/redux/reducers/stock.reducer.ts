@@ -2,14 +2,18 @@ import { STOCK_ACTIONS } from "../../constants";
 import {
   BestTradeByStockTypeType,
   StockTypeByMonth,
+  Trade,
 } from "../../types/stock.type";
 import { StockActionType } from "../actions";
 
 export type StocksState = {
   StocksTypeByMonth: StockTypeByMonth;
   bestTrade: BestTradeByStockTypeType;
+  bestTrades: Trade[];
+  executionTime: null | number;
   failure: boolean;
-  isLoading: boolean;
+  bestTradeIsLoading: boolean;
+  bestTradesIsLoading: boolean;
 };
 
 const initialState: StocksState = {
@@ -22,7 +26,10 @@ const initialState: StocksState = {
     google: null,
   },
   failure: false,
-  isLoading: false,
+  bestTradeIsLoading: false,
+  bestTradesIsLoading: false,
+  bestTrades: [],
+  executionTime: null,
 };
 
 export function stockReducer(
@@ -34,19 +41,19 @@ export function stockReducer(
     case STOCK_ACTIONS.GET_STOCKS_BY_MONTH:
       return {
         ...state,
-        isLoading: true,
+        bestTradeIsLoading: true,
       };
     case STOCK_ACTIONS.GET_STOCKS_BY_MONTH_DONE:
       return {
         ...state,
         StocksTypeByMonth: action.payload,
-        isLoading: false,
+        bestTradeIsLoading: false,
       };
     case STOCK_ACTIONS.GET_STOCKS_BY_MONTH_FAILED:
       return {
         ...state,
         failure: true,
-        isLoading: false,
+        bestTradeIsLoading: false,
       };
     case STOCK_ACTIONS.GET_BEST_TRADE_DONE:
       return {
@@ -56,6 +63,19 @@ export function stockReducer(
           [action.payload.stockType]: action.payload.trade,
         },
       };
+    case STOCK_ACTIONS.GET_BEST_TRADES:
+      return {
+        ...state,
+        bestTradesIsLoading: true,
+      };
+    case STOCK_ACTIONS.GET_BEST_TRADES_DONE:
+      return {
+        ...state,
+        bestTrades: action.payload.trades,
+        executionTime: action.payload.time,
+        bestTradesIsLoading: false,
+      };
+
     default:
       return state;
   }
