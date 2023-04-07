@@ -20,7 +20,17 @@ const getBestTrade = (stockType: string, budget: number) => {
   );
 };
 
+const getBestTrades = (budget: number) => {
+  return HttpClient.get<ApiResponse<{ trades: BestTradeType; time: number }>>(
+    `${API_URL}/stocks/StocksBestTrades`,
+    {
+      budget: budget.toString(),
+    }
+  );
+};
+
 export const stockApi = {
   getStocksByMonth,
   getBestTrade,
+  getBestTrades,
 };

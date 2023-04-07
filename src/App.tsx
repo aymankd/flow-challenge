@@ -5,6 +5,7 @@ import { Home } from "./views/home";
 import Navbar from "./views/navbar";
 import createRootStore from "./redux/store/root.store";
 import { Provider } from "react-redux";
+import Transactions from "./views/Transactions";
 
 const store = createRootStore();
 
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTES.TRANSACTIONS,
-        element: <div>Transactions</div>,
+        element: <Transactions />,
       },
     ],
   },

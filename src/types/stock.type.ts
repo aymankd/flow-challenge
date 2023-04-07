@@ -2,6 +2,10 @@ export enum StockType {
   GOOGLE = "google",
   AMAZON = "amazon",
 }
+export enum ActionType {
+  BUY = "buy",
+  SELL = "sell",
+}
 
 export interface Stock {
   _id: string;
@@ -31,6 +35,15 @@ export type BestTradeType<T = Date> = {
   profit: number;
   buyDate: T;
   sellDate: T;
+};
+
+export type Trade<T = Date> = {
+  date: T;
+  stockType: StockType;
+  price: number;
+  quantity: number;
+  actionType: ActionType;
+  wallet: number;
 };
 
 export type StockTypeByMonth = Record<StockType, StockByMonth[]>;
