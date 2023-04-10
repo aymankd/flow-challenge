@@ -20,7 +20,7 @@ const initialState: StocksState = {
   StocksTypeByMonth: {
     amazon: [],
     google: [],
-  } as StockTypeByMonth,
+  },
   bestTrade: {
     amazon: null,
     google: null,

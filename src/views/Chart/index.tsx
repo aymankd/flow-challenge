@@ -12,6 +12,7 @@ import {
   StockType,
   StockTypeByMonth,
 } from "../../types/stock.type";
+import { toCompleteFrenchDateformat } from "../../helpers/date.helper";
 
 const getDataFromStocksTypeByMonth = (
   stocksTypeByMonth: StockTypeByMonth,
@@ -49,9 +50,10 @@ export default function ChartPage() {
   const bestTrade = (type: StockType, bestTradeType: BestTradeType) => (
     <h2>
       {type === StockType.AMAZON ? "Ayman" : "Anouar"} devrait acheter 100 000 €
-      d&apos;action Amazon le {bestTradeType.buyDate.toDateString()} au prix de{" "}
+      d&apos;action {type === StockType.AMAZON ? "Amazon" : "Google"} le{" "}
+      {toCompleteFrenchDateformat(bestTradeType.buyDate)} au prix de{" "}
       {bestTradeType.buyPrice} €. il devrait ensuite vendre ces actions le{" "}
-      {bestTradeType.sellDate.toDateString()} au prix de{" "}
+      {toCompleteFrenchDateformat(bestTradeType.sellDate)} au prix de{" "}
       {bestTradeType.sellPrice} € pour faire un gain de{" "}
       {bestTradeType.profit.toFixed(2)} €.
     </h2>

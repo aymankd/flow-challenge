@@ -1,14 +1,7 @@
-import { formatDate } from "../helpers/date.helper";
+import { toEuroFormat } from "../helpers/currency.helper";
+import { toFrenchDateformat } from "../helpers/date.helper";
 import { ActionType, Trade } from "../types/stock.type";
-
-const headers = [
-  "DATE",
-  "ACTION",
-  "NOM",
-  "PRIX UNITAIRE",
-  "NOMBRE D'ACTION",
-  "PORTEFEUILLE",
-];
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 export type TableProp = {
   children: React.ReactNode;
@@ -25,15 +18,27 @@ export const TableLoading: React.FC = () => (
   </div>
 );
 
-export type TableHeaderProp = {
-  headers: string[];
-};
-export const TableHeader: React.FC<TableHeaderProp> = ({ headers }) => (
+export const TableHeader: React.FC = () => (
   <thead className="bg-gray-600 text-white">
     <tr>
-      {headers.map((header) => (
-        <th key={header}>{header}</th>
-      ))}
+      <th>DATE</th>
+      <th>ACTION</th>
+      <th>NOM</th>
+      <th>PRIX UNITAIRE</th>
+      <th>NOMBRE D'ACTION</th>
+      <th>
+        <div className="flex items-center justify-center gap-3">
+          PORTEFEUILLE
+          <div className="has-tooltip">
+            <span className="tooltip rounded shadow-lg p-1 bg-gray-600 text-white text-xs -mt-8 -ml-20">
+              Le portefeuille est le montant d'argent restant après avoir
+              effectué l'achat ou la vente d'actions plus la valeur marchande
+              des actions acheter.
+            </span>
+            <AiOutlineInfoCircle />
+          </div>
+        </div>
+      </th>
     </tr>
   </thead>
 );
@@ -43,16 +48,16 @@ export type TableRowProp = {
 };
 export const TableRow: React.FC<TableRowProp> = ({ trade }) => (
   <tr className="bg-gray-200 text-black">
-    <td>{formatDate(trade.date)}</td>
+    <td>{toFrenchDateformat(trade.date)}</td>
     {trade.actionType === ActionType.BUY ? (
       <td className="text-green-600"> Achat </td>
     ) : (
       <td className="text-red-600"> Vente </td>
     )}
     <td>{trade.stockType}</td>
-    <td>{trade.price}</td>
+    <td>{toEuroFormat(trade.price)}</td>
     <td>{trade.quantity}</td>
-    <td>{trade.wallet}</td>
+    <td>{toEuroFormat(trade.wallet)}</td>
   </tr>
 );
 
@@ -61,7 +66,7 @@ export type TableDataProp = {
 };
 export const TransactionTable: React.FC<TableDataProp> = ({ data }) => (
   <Table>
-    <TableHeader headers={headers} />
+    <TableHeader />
     <tbody className="overflow-auto h-96">
       {data.map((trade, index) => (
         <TableRow key={index} trade={trade} />
